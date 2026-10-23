@@ -21,7 +21,6 @@ The following actions are available:
 - `CopcViewer`: Allows to open Cloud-Optimized Point Cloud (COPC, media type `application/vnd.laszip+copc`) files through the Hobu COPC Viewer at <https://viewer.copc.io>.
 - `F3D`: Allows to open 3D models (media types `model/gltf-binary`, `model/gltf+json`, and `application/fbx`) files through the F3D Web App at <https://f3d.app/viewer/>.
 - `Felt`: Allows to open GeoTIFF, GeoJSON and KML/KMZ files through Felt at <https://felt.com/map/>.
-- `Geofox`: Allows to open OGC 3D Tiles  (media type `application/3dtiles+json`) files through the 3D Assets Viewer at <https://viewer.geofox.ai>.
 - `GeoJsonIo`: Allows to open GeoJSON files through [geojson.io](https://geojson.io).
 - `Potree`: Allows to open Cloud-Optimized Point Cloud (COPC, media type `application/vnd.laszip+copc`) and Potree files (file names `cloud.js`, `metadata.json`, `ept.json`) files through the Potree Viewer at <https://3d.iconem.com/apps/load_potree_project_from_urlparam/>.
 - `Protomaps`: Allows to open PMTiles (media type `application/vnd.pmtiles`) files through PMTiles Viewer at <https://pmtiles.io>.
@@ -89,7 +88,6 @@ The following actions are available:
 
 - `Cesium`: Allows to open OGC 3D Tiles (relation type `3d-tiles`, see [web-map-links extension](https://github.com/stac-extensions/web-map-links/blob/v1.2.0/README.md#3d-tiles)) files through the Cesium Sandcastle at <https://sandcastle.cesium.com>.
 - `Felt`: Allows to open XYZ tile services (relation type `xyz`, see [web-map-links extension](https://github.com/stac-extensions/web-map-links/blob/v1.2.0/README.md#xyz)) files through Felt at <https://felt.com/map/>.
-- `Geofox`: Allows to open OGC 3D Tiles (relation type `3d-tiles`, see [web-map-links extension](https://github.com/stac-extensions/web-map-links/blob/v1.2.0/README.md#3d-tiles)) files through the 3D Assets Viewer at <https://viewer.geofox.ai>.
 - `Protomaps`: Allows to open PMTiles (relation type `pmtiles`, see [web-map-links extension](https://github.com/stac-extensions/web-map-links/blob/v1.2.0/README.md#pmtiles)) files through PMTiles Viewer at <https://pmtiles.io>.
 
 All actions for links are stored in the folder [`src/actions/links`](../src/actions/links) if you want to inspect them.
