@@ -8,7 +8,7 @@ This fork shows one catalog, the BAFU Portolan catalog, in the Swiss federal loo
 - **Title and languages.** "BAFU Geodaten", `de-CH`, `fr-CH`, `it-CH` and `en` (`config.js`).
 - **Basemaps.** swisstopo vector tile styles. The map is bound to Switzerland (`basemaps.config.js`).
 - **Theme.** Palette of [swiss/designsystem](https://github.com/swiss/designsystem) and self-hosted Noto Sans (`src/theme/`).
-- **Federal bar.** Unmodified `BundLogo.svg` from the design system (`src/components/BundBar.vue`).
+- **Federal logo.** Unmodified `BundLogo.svg` from the design system (`src/components/BundLogo.vue`).
 - **Deployment.** GitHub Pages workflow (`.github/workflows/deploy-demo.yml`).
 
 ## Switch to another catalog

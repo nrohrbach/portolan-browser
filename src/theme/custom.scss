@@ -26,7 +26,25 @@
   // The bar's colour comes from $header / $header-background in variables.scss.
   // Only the accent rule under it lives here.
   > header .site {
-    border-bottom: 2px solid $primary;
+    border-bottom: 1px solid #acb4bd; // secondary-200
+    padding: 0.5rem 0;
+
+    // Logo, divider and title sit at the start of the bar. The buttons move
+    // to the end. The title does not need a centered column or the 350 px
+    // minimum width that upstream gives each button group.
+    > .col-md-12 {
+      .actions {
+        min-width: 0;
+      }
+
+      > .title {
+        justify-content: flex-start;
+
+        a {
+          text-decoration: none;
+        }
+      }
+    }
   }
 
   > header .page {
