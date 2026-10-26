@@ -2,7 +2,7 @@ import { mapState } from 'vuex';
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { markRaw } from 'vue';
-import configureBasemap, { BASEMAP_ATTRIBUTION, MAP_CONSTRAINTS } from '../../../basemaps.config';
+import configureBasemap, { BASEMAP_ATTRIBUTION, MAP_CONSTRAINTS, MAP_INTRO, MAP_INTRO_TIMEOUT_MS } from '../../../basemaps.config';
 
 export const pmtilesProtocol = new Protocol({ metadata: true });
 maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile);
@@ -42,11 +42,15 @@ export default {
       this.map = markRaw(new maplibregl.Map({
         container: element,
         style: { version: 8, sources: {}, layers: [] },
-        ...MAP_CONSTRAINTS,
+        center: MAP_INTRO.center,
+        zoom: MAP_INTRO.zoom,
+        maxZoom: MAP_CONSTRAINTS.maxZoom,
         attributionControl: false,
         interactive: !onfocusOnly,
         maxTileCacheSize: 300,
       }));
+
+      this._applyConstraintsAfterIntro(this.map);
 
       this.map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
       this.map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: BASEMAP_ATTRIBUTION }), 'bottom-right');
@@ -62,6 +66,31 @@ export default {
       if (this.basemaps.length > 0) {
         this._loadBasemapAsync(this.basemaps[0]);
       }
+    },
+
+    /**
+     * The map starts zoomed out and flies in to the data. Applying minZoom and
+     * maxBounds at creation would cut that approach short, so they apply after
+     * the first zoom that leaves the intro zoom, or after a timeout.
+     * A resize also fires move events, so the trigger is zoomend and not moveend.
+     */
+    _applyConstraintsAfterIntro(map) {
+      let done = false;
+      let timer = null;
+      const apply = () => {
+        if (done) {return;}
+        done = true;
+        clearTimeout(timer);
+        if (this.map !== map) {return;}
+        map.setMinZoom(MAP_CONSTRAINTS.minZoom);
+        map.setMaxBounds(MAP_CONSTRAINTS.maxBounds);
+      };
+      map.on('zoomend', () => {
+        if (Math.abs(map.getZoom() - MAP_INTRO.zoom) > 0.01) {
+          apply();
+        }
+      });
+      timer = setTimeout(apply, MAP_INTRO_TIMEOUT_MS);
     },
 
     _loadBasemapAsync(basemap) {
