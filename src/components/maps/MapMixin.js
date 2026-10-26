@@ -2,7 +2,7 @@ import { mapState } from 'vuex';
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { markRaw } from 'vue';
-import configureBasemap, { BASEMAP_ATTRIBUTION, MAP_CONSTRAINTS } from '../../../basemaps.config';
+import configureBasemap, { BASEMAP_ATTRIBUTION, MAP_CONSTRAINTS, MAP_INTRO, MAP_INTRO_QUIET_MS, MAP_INTRO_TIMEOUT_MS } from '../../../basemaps.config';
 
 export const pmtilesProtocol = new Protocol({ metadata: true });
 maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile);
@@ -42,11 +42,15 @@ export default {
       this.map = markRaw(new maplibregl.Map({
         container: element,
         style: { version: 8, sources: {}, layers: [] },
-        ...MAP_CONSTRAINTS,
+        center: MAP_INTRO.center,
+        zoom: MAP_INTRO.zoom,
+        maxZoom: MAP_CONSTRAINTS.maxZoom,
         attributionControl: false,
         interactive: !onfocusOnly,
         maxTileCacheSize: 300,
       }));
+
+      this._applyConstraintsAfterIntro(this.map);
 
       this.map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
       this.map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: BASEMAP_ATTRIBUTION }), 'bottom-right');
@@ -62,6 +66,44 @@ export default {
       if (this.basemaps.length > 0) {
         this._loadBasemapAsync(this.basemaps[0]);
       }
+    },
+
+    /**
+     * The map starts zoomed out and flies in to the data. Applying minZoom and
+     * maxBounds at creation would cut that approach short. They apply once the
+     * camera has left the intro zoom and then stood still for a moment.
+     *
+     * Other code can call fit() again while the camera flies, for example when
+     * children or assets load. A new flight stops the old one, which fires
+     * moveend at a zoom in between. The quiet period ignores that moveend,
+     * because the next movestart cancels it. The timeout covers maps that never
+     * zoom, for example a STAC object without a bounding box.
+     */
+    _applyConstraintsAfterIntro(map) {
+      let done = false;
+      let quietTimer = null;
+      let timeoutTimer = null;
+      const apply = () => {
+        if (done) {return;}
+        if (map.isMoving()) {
+          timeoutTimer = setTimeout(apply, MAP_INTRO_QUIET_MS);
+          return;
+        }
+        done = true;
+        clearTimeout(quietTimer);
+        clearTimeout(timeoutTimer);
+        if (this.map !== map) {return;}
+        map.setMinZoom(MAP_CONSTRAINTS.minZoom);
+        map.setMaxBounds(MAP_CONSTRAINTS.maxBounds);
+      };
+      map.on('movestart', () => clearTimeout(quietTimer));
+      map.on('moveend', () => {
+        if (!done && Math.abs(map.getZoom() - MAP_INTRO.zoom) > 0.01) {
+          clearTimeout(quietTimer);
+          quietTimer = setTimeout(apply, MAP_INTRO_QUIET_MS);
+        }
+      });
+      timeoutTimer = setTimeout(apply, MAP_INTRO_TIMEOUT_MS);
     },
 
     _loadBasemapAsync(basemap) {
