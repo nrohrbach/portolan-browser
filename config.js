@@ -57,8 +57,6 @@ export default {
   transactionsRequireLogin: true,
   transactionsRequirePreflight: true,
   crs: {},
-  footerLinks: [
-    { label: "BAFU", url: "https://www.bafu.admin.ch/" },
-    { label: "Rechtliches", url: "https://www.admin.ch/gov/de/start/rechtliches.html" }
-  ]
+  // BafuFooter draws the footer, including its links.
+  footerLinks: null
 };

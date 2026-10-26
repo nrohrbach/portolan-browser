@@ -13,6 +13,8 @@ export default [
         ...globals.browser,
         // Your custom globals
         STAC_BROWSER_VERSION: 'readonly',
+        BAFU_BUILD_COMMIT: 'readonly',
+        BAFU_BUILD_TIME: 'readonly',
         CONFIG_FROM_ENV: 'readonly',
       }
     }

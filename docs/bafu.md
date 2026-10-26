@@ -9,6 +9,7 @@ This fork shows one catalog, the BAFU Portolan catalog, in the Swiss federal loo
 - **Basemaps.** swisstopo vector tile styles.
 - **Theme.** Palette of [swiss/designsystem](https://github.com/swiss/designsystem) and self-hosted Noto Sans (`src/theme/`).
 - **Federal logo.** Unmodified `BundLogo.svg` from the design system (`src/components/BundLogo.vue`).
+- **Footer.** Contact, legal link and build info in four languages (`src/components/BafuFooter.vue`). The version is the commit hash, set at build time in `vite.config.js`.
 - **Deployment.** GitHub Pages workflow (`.github/workflows/deploy-demo.yml`).
 
 ## Switch to another catalog
@@ -29,5 +30,4 @@ and publishes the site. The workflow sets `SB_pathPrefix` to `/<repository name>
   with swisstopo. `lightbasemap` is open with a source reference.
 - **Basemap check.** Confirm in a browser that labels render. A style without `glyphs` draws no text.
 - **CORS.** The catalog bucket must allow range requests from the site origin.
-- **Footer links.** Add the BAFU contact link to `footerLinks` in `config.js`.
 - **Map colors.** Data layers still use the upstream blue `#4163cc` in `StacMapLayer.js`.
