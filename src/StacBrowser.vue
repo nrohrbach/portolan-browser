@@ -5,11 +5,17 @@
     <Authentication v-if="showLogin" />
     <ErrorAlert v-if="globalError" dismissible class="global-error" v-bind="globalError" @close="hideError" />
     <Sidebar v-if="sidebar !== null" v-model="sidebar" />
-    <BundBar />
     <!-- Header -->
     <header ref="header" :class="{ scrolled, 'hide-site-header': hideSite }">
       <b-row class="site">
         <b-col md="12">
+          <BundLogo />
+          <div class="title">
+            <StacLink v-if="root" :data="root">
+              <HeaderTitle ref="headerTitle" />
+            </StacLink>
+            <HeaderTitle v-else ref="headerTitle" />
+          </div>
           <nav class="actions navigation">
             <b-button-group v-if="canSearch || !isServerSelector || showFavoritesFromVueX">
               <b-button v-if="!isServerSelector" variant="header" :title="$t('browse')" @click="sidebar = !sidebar">
@@ -26,12 +32,6 @@
               </b-button>
             </b-button-group>
           </nav>
-          <div class="title">
-            <StacLink v-if="root" :data="root">
-              <HeaderTitle ref="headerTitle" />
-            </StacLink>
-            <HeaderTitle v-else ref="headerTitle" />
-          </div>
           <nav class="actions user">
             <b-button-group>
               <b-button v-if="canAuthenticate" variant="header" @click="logInOut" :title="authTitle">
@@ -119,7 +119,7 @@ import BIconLock from '~icons/bi/lock';
 import BIconUnlock from '~icons/bi/unlock';
 
 import ErrorAlert from './components/ErrorAlert.vue';
-import BundBar from './components/BundBar.vue';
+import BundLogo from './components/BundLogo.vue';
 import HeaderTitle from './components/HeaderTitle.vue';
 import Loading from './components/Loading.vue';
 import StacLink from './components/StacLink.vue';
@@ -161,7 +161,7 @@ export default defineComponent({
     BIconUnlock,
     BPopover: defineAsyncComponent(() => import('bootstrap-vue-next').then(m => m.BPopover)),
     ErrorAlert,
-    BundBar,
+    BundLogo,
     HeaderTitle,
     LanguageChooser: defineAsyncComponent(() => import('./components/LanguageChooser.vue')),
     Loading,

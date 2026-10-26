@@ -99,12 +99,12 @@ $link-hover-color: #bf1f25; // primary-700
 @import 'bootstrap/scss/_variables';
 
 // Main/top header of the website.
-// Light bar with dark ink, below the federal bar that BundBar.vue draws.
+// Light bar with dark ink. BundLogo.vue puts the federal logo at its start.
 $header: #ffffff;
 $header-background: $header; // flat, not upstream's linear-gradient
 $header-position: sticky; // sticky or static
-$header-font-size: 1.5rem;
-$header-font-weight: 600;
+$header-font-size: 1.75rem;
+$header-font-weight: 300; // light title next to the federal logo, as in the databox
 $header-text-shadow: none; // a drop shadow under dark-on-light text reads as blur
 
 $header-contrast: color-contrast($header);
