@@ -14,6 +14,8 @@ requires, including cartography, cloud-optimized files, and registry metadata th
 has no reason to understand. This fork uses all of it. Everything upstream does still works, and a plain
 STAC catalog opens here too.
 
+> **BAFU Geodaten.** This fork is configured for one catalog in the Swiss federal look. See [docs/bafu.md](docs/bafu.md).
+
 ## Table of Contents <!-- omit in toc -->
 
 - [What This Fork Adds](#what-this-fork-adds)
