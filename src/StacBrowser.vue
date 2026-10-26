@@ -5,6 +5,7 @@
     <Authentication v-if="showLogin" />
     <ErrorAlert v-if="globalError" dismissible class="global-error" v-bind="globalError" @close="hideError" />
     <Sidebar v-if="sidebar !== null" v-model="sidebar" />
+    <BundBar />
     <!-- Header -->
     <header ref="header" :class="{ scrolled, 'hide-site-header': hideSite }">
       <b-row class="site">
@@ -118,6 +119,7 @@ import BIconLock from '~icons/bi/lock';
 import BIconUnlock from '~icons/bi/unlock';
 
 import ErrorAlert from './components/ErrorAlert.vue';
+import BundBar from './components/BundBar.vue';
 import HeaderTitle from './components/HeaderTitle.vue';
 import Loading from './components/Loading.vue';
 import StacLink from './components/StacLink.vue';
@@ -159,6 +161,7 @@ export default defineComponent({
     BIconUnlock,
     BPopover: defineAsyncComponent(() => import('bootstrap-vue-next').then(m => m.BPopover)),
     ErrorAlert,
+    BundBar,
     HeaderTitle,
     LanguageChooser: defineAsyncComponent(() => import('./components/LanguageChooser.vue')),
     Loading,
