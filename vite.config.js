@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, searchForWorkspaceRoot } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, pathToFileURL, URL } from "node:url";
 import { accessSync, readFileSync } from "fs";
+import { execSync } from "node:child_process";
 import { resolve } from "node:path";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
@@ -23,6 +24,21 @@ const configSchema = JSON.parse(
 const package_ = JSON.parse(
   readFileSync(new URL("./package.json", import.meta.url), "utf-8")
 );
+
+// Shown in the footer. GITHUB_SHA is set in GitHub Actions. Elsewhere git
+// answers, and a build outside a checkout falls back to "dev".
+const buildCommit = (() => {
+  if (process.env.GITHUB_SHA) {
+    return process.env.GITHUB_SHA.slice(0, 7);
+  }
+  try {
+    return execSync("git rev-parse --short=7 HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+  }
+  catch {
+    return "dev";
+  }
+})();
+const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ") + " UTC";
 
 const isSchemaType = (schema, type) =>
   Array.isArray(schema.type) ? schema.type.includes(type) : (schema.type === type);
@@ -131,6 +147,8 @@ export default defineConfig(async ({ mode }) => {
     },
     define: {
       STAC_BROWSER_VERSION: JSON.stringify(package_.version),
+      BAFU_BUILD_COMMIT: JSON.stringify(buildCommit),
+      BAFU_BUILD_TIME: JSON.stringify(buildTime),
       // JSON.stringify removes e.g. functions from the config,
       // but from env we do not accept functions anyway.
       CONFIG_FROM_ENV: JSON.stringify(configFromEnv),

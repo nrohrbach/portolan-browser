@@ -93,10 +93,14 @@
     font-weight: 500;
   }
 
+  // Dark footer across the full width. The box-shadow paints the color to the
+  // edges of the page, and clip-path keeps it from spilling up or down.
   > footer {
-    border-top: 1px solid #acb4bd; // secondary-200
-    padding-top: 1rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    padding: 0;
+    background: $secondary;
+    box-shadow: 0 0 0 100vmax $secondary;
+    clip-path: inset(0 -100vmax);
   }
 
   .description {

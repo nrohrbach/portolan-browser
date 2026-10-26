@@ -83,18 +83,7 @@
     <!-- Footer -->
     <footer>
       <WidgetHook id="footer-start" />
-      <ul v-if="Array.isArray(footerLinksFromVueX) && footerLinksFromVueX.length > 0" class="footer-links text-body-secondary">
-        <li v-for="link in footerLinksFromVueX" :key="link.url">
-          <a :href="link.url" target="_blank" rel="noopener noreferrer">{{ $te(`footerLinks.${link.label}`) ? $t(`footerLinks.${link.label}`) : link.label }}</a>
-        </li>
-      </ul>
-      <i18n-t tag="small" keypath="poweredBy" class="poweredby text-body-secondary" scope="global">
-        <template #link>
-          <a href="https://github.com/portolan-sdi/portolan-browser" target="_blank" rel="noopener noreferrer">Portolan Browser</a> {{ browserVersion }},
-          {{ $t('builtOn', 'built on') }}
-          <a href="https://github.com/radiantearth/stac-browser" target="_blank" rel="noopener noreferrer">STAC Browser</a>
-        </template>
-      </i18n-t>
+      <BafuFooter :browserVersion="browserVersion" />
     </footer>
     <b-popover
       v-if="root" id="popover-root" class="popover-large" target="popover-root-btn"
@@ -119,6 +108,7 @@ import BIconLock from '~icons/bi/lock';
 import BIconUnlock from '~icons/bi/unlock';
 
 import ErrorAlert from './components/ErrorAlert.vue';
+import BafuFooter from './components/BafuFooter.vue';
 import BundLogo from './components/BundLogo.vue';
 import HeaderTitle from './components/HeaderTitle.vue';
 import Loading from './components/Loading.vue';
@@ -161,6 +151,7 @@ export default defineComponent({
     BIconUnlock,
     BPopover: defineAsyncComponent(() => import('bootstrap-vue-next').then(m => m.BPopover)),
     ErrorAlert,
+    BafuFooter,
     BundLogo,
     HeaderTitle,
     LanguageChooser: defineAsyncComponent(() => import('./components/LanguageChooser.vue')),
@@ -190,7 +181,6 @@ export default defineComponent({
     ...mapState({
       allowExternalAccessFromVueX: 'allowExternalAccess',
       showFavoritesFromVueX: 'showFavorites',
-      footerLinksFromVueX: 'footerLinks',
       localeFromVueX: 'locale',
       fallbackLocaleFromVueX: 'fallbackLocale',
       detectLocaleFromBrowserFromVueX: 'detectLocaleFromBrowser',
