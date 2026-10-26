@@ -1,88 +1,51 @@
-import { Collection, STAC } from 'stac-js';
+// Basemaps come from swisstopo's vector tile styles, served at
+// https://vectortiles.geo.admin.ch/. The style files are MapLibre styles.
+// swisstopo requires a source reference on every map. MapMixin adds it with
+// BASEMAP_ATTRIBUTION, so it shows whether or not the style carries one.
+// Terms of use: https://opendata.swiss/terms-of-use
+export const BASEMAP_ATTRIBUTION = '© swisstopo';
+
+const STYLES = 'https://vectortiles.geo.admin.ch/styles';
 
 const BASEMAPS = {
   earth: [
     {
-      url: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-      title: 'Voyager',
+      url: `${STYLES}/ch.swisstopo.lightbasemap.vt/style.json`,
+      title: 'Basiskarte hell',
     },
     {
-      url: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-      title: 'Positron',
+      url: `${STYLES}/ch.swisstopo.basemap.vt/style.json`,
+      title: 'Basiskarte',
     },
     {
-      url: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      title: 'Dark Matter',
-    },
-    {
-      url: 'https://cholmes.github.io/overture-pmtiles-styles/style-satellite.json',
-      title: 'Satellite',
-    },
-  ],
-//'earth-dark': [
-//  {
-//    url: 'https://cartodb-basemaps-{a-d}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
-//    is: 'XYZ',
-//    title: 'Carto Dark',
-//    attributions: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
-//    projection: "EPSG:3857"
-//  }
-//],
-  europa: [
-    {
-      title: 'USGS Europa',
-      raster: true,
-      attribution: 'USGS Astrogeology',
-      tiles: ['https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/jupiter/europa_simp_cyl.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=GALILEO_VOYAGER&SRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png'],
-    },
-  ],
-  mars: [
-    {
-      title: 'USGS Mars',
-      raster: true,
-      attribution: 'USGS Astrogeology',
-      tiles: ['https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/mars/mars_simp_cyl.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=MDIM21&SRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png'],
-    },
-  ],
-  moon: [
-    {
-      title: 'USGS Moon',
-      raster: true,
-      attribution: 'USGS Astrogeology',
-      tiles: ['https://planetarymaps.usgs.gov/cgi-bin/mapserv?map=/maps/earth/moon_simp_cyl.map&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=LROC_WAC&SRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png'],
+      url: `${STYLES}/ch.swisstopo.imagerybasemap.vt/style.json`,
+      title: 'Luftbild',
     },
   ],
 };
 
+// The initial view frames Switzerland. The bounds sit well outside the
+// country so border regions stay visible. minZoom keeps the country filling
+// the viewport instead of shrinking into a world map.
+//
+// maxBounds must stay wider than what minZoom renders on a large screen, or
+// MapLibre fights its own constraints. At minZoom 7 a 1920 px wide viewport
+// spans about 10.6 degrees, and these bounds span 13.
+export const MAP_CONSTRAINTS = {
+  center: [8.23, 46.8],
+  zoom: 7.5,
+  minZoom: 7,
+  maxZoom: 18,
+  maxBounds: [[2.0, 43.0], [15.0, 51.0]],
+};
+
 /**
- * Portolan's basemaps are MapLibre GL style/raster definitions, not the
- * OpenLayers layers upstream configures here, so this takes only the STAC
- * object. Upstream's `i18n` and `store` arguments — the latter used to pick a
- * dark basemap variant from `store.state.colorMode` — arrive when the MapLibre
- * stack learns to follow the color mode.
+ * This browser shows one catalog on Earth, so every STAC object gets the same
+ * swisstopo basemaps. The `stac` argument stays in the signature because the
+ * map code calls it with the STAC object.
  *
- * @param {Object} stac The STAC object
  * @returns {Array.<BasemapOptions>}
  */
-export default function configureBasemap(stac) {
-  let targets;
-  if (stac instanceof Collection) {
-    targets = stac.getSummary('ssys:targets');
-  }
-  if (stac instanceof STAC && !targets) {
-    targets = stac.getMetadata('ssys:targets');
-  }
-  if (!targets) {
-    targets = ['earth'];
-  }
-
-  let layers = [];
-  for (const target of targets) {
-    const maps = BASEMAPS[target.toLowerCase()];
-    if (!Array.isArray(maps)) {
-      continue;
-    }
-    layers = layers.concat(maps);
-  }
-  return layers;
+export default function configureBasemap() {
+  return BASEMAPS.earth;
 }
