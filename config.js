@@ -1,37 +1,25 @@
 export default {
-  catalogUrl: null,
-  registryUrl: "https://raw.githubusercontent.com/portolan-sdi/portolan-registry/refs/heads/main/exports/catalogs.json",
-  catalogTitle: "Portolan Browser",
+  // PoC catalog. Switch to the official BAFU catalog with SB_catalogUrl at
+  // build time, and add its host to allowedDomains.
+  catalogUrl: "https://ron-portolan.s3.eu-central-1.amazonaws.com/portolan/catalog.json",
+  registryUrl: null,
+  catalogTitle: "BAFU Geodaten",
   catalogTitleAfterImage: null,
-  catalogImage: "/portolan-logo.svg",
-  allowExternalAccess: true, // Must be true if catalogUrl is not given
-  allowedDomains: [],
+  // BafuHeader draws the logo and the title, so there is no image to resolve.
+  catalogImage: null,
+  // This browser serves one catalog. It is not a general STAC viewer.
+  allowExternalAccess: false,
+  allowedDomains: ["ron-portolan.s3.eu-central-1.amazonaws.com"],
   enforcedColorMode: "light",
   detectLocaleFromBrowser: true,
   storeLocale: true,
-  locale: "en",
+  locale: "de-CH",
   fallbackLocale: "en",
   supportedLocales: [
-    "ar",
-    "de",
-//  "de-CH",
-    "es",
-    "en",
-//  "en-GB",
-//  "en-US",
-    "fr",
-//  "fr-CA",
-//  "fr-CH",
-    "it",
-//  "it-CH",
-    "ro",
-    "ru",
-    "ja",
-    "pt",
-//  "pt-BR",
-    "id",
-    "pl",
-    "sv"
+    "de-CH",
+    "fr-CH",
+    "it-CH",
+    "en"
   ],
   apiCatalogPriority: null,
   useTileLayerAsFallback: false,
@@ -69,5 +57,8 @@ export default {
   transactionsRequireLogin: true,
   transactionsRequirePreflight: true,
   crs: {},
-  footerLinks: null
+  footerLinks: [
+    { label: "BAFU", url: "https://www.bafu.admin.ch/" },
+    { label: "Rechtliches", url: "https://www.admin.ch/gov/de/start/rechtliches.html" }
+  ]
 };
