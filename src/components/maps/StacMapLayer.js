@@ -264,6 +264,10 @@ export default class StacMapLayer {
     // aborted only when nothing wants them any more (_abortInflightParquet).
     this._parquetInflight = new Map();
     this._overlayEpoch = 0;
+    // Whether the footprint (the bounding box or geometry of the STAC object)
+    // is drawn. setStac re-creates the layers after every basemap change, so
+    // the state lives here and not on the map layers.
+    this._footprintVisible = true;
     this._glStyleLayerIds = [];
     this._glStyleSourceIds = [];
     this._activeGlStyle = null;
@@ -344,6 +348,7 @@ export default class StacMapLayer {
       id: STAC_FILL_LAYER,
       type: 'fill',
       source: STAC_SOURCE,
+      layout: { visibility: this._footprintVisible ? 'visible' : 'none' },
       paint: {
         'fill-color': '#4163cc',
         'fill-opacity': 0.1,
@@ -354,6 +359,7 @@ export default class StacMapLayer {
       id: STAC_LINE_LAYER,
       type: 'line',
       source: STAC_SOURCE,
+      layout: { visibility: this._footprintVisible ? 'visible' : 'none' },
       paint: {
         'line-color': '#4163cc',
         'line-width': 2,
@@ -1376,6 +1382,7 @@ export default class StacMapLayer {
   }
 
   setFootprintVisible(visible) {
+    this._footprintVisible = Boolean(visible);
     const val = visible ? 'visible' : 'none';
     for (const id of this.getFootprintLayerIds()) {
       if (this.map.getLayer(id)) {
